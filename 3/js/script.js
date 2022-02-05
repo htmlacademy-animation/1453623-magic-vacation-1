@@ -10611,8 +10611,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = (() => {
   const LINK_PRIZES = document.querySelector(`a[href="#prizes"]`);
   const SOFT_TIMEOUT = 100;
-  const DURATION_TIMEOUT = 1000;
-  const REMOVE_TIMEOUT = 1000;
+  const TRANSITION_TIMEOUT = 500;
+  const DURATION_TIMEOUT = (SOFT_TIMEOUT + TRANSITION_TIMEOUT);
 
   let blockCreator = function (classCSS, height) {
     let block = document.createElement(`div`);
@@ -10621,7 +10621,7 @@ __webpack_require__.r(__webpack_exports__);
     setTimeout(() => {
       block.style.height = height;
     }, SOFT_TIMEOUT);
-    setTimeout(() => block.remove(), REMOVE_TIMEOUT);
+    setTimeout(() => block.remove(), DURATION_TIMEOUT);
   };
 
 
