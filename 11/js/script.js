@@ -10682,90 +10682,6 @@ class FullPageScroll {
 
 /***/ }),
 
-/***/ "./source/js/modules/game.js":
-/*!***********************************!*\
-  !*** ./source/js/modules/game.js ***!
-  \***********************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-
-/* harmony default export */ __webpack_exports__["default"] = (() => {
-  const TIME = 5;
-
-  let screen = document.querySelector(`.screen--game`);
-  let config = {attributes: true, attributeOldValue: true};
-
-  let counter = document.querySelector(`.game__counter`);
-  let minutesContainer = counter.children[0];
-  let secondsContainer = counter.children[1];
-
-  let observer = new MutationObserver((mutations) => {
-    mutations.forEach(() => {
-      if (screen.classList.contains(`active`)) {
-        let then = Date.now();
-
-        let now;
-        let elapsed;
-
-
-        let seconds;
-        let minutes = TIME;
-        let divisor = 0;
-
-        let request;
-        let required = 60000 * TIME;
-
-        let timeCounter = () => {
-          request = requestAnimationFrame(timeCounter);
-
-          now = Date.now();
-          elapsed = now - then;
-
-          if (seconds === 0 || seconds < 0) {
-            divisor++;
-          }
-
-          minutes = Math.floor((required - elapsed) / 60000);
-          seconds = 60 - (Math.floor(elapsed / 1000)) + (60 * divisor);
-
-          if (minutes < 0) {
-            minutes = 0;
-          }
-          minutesContainer.textContent = minutes.toString();
-
-          if (seconds < 10) {
-            secondsContainer.textContent = `0${seconds.toString()}`;
-          } else {
-            secondsContainer.textContent = seconds.toString();
-          }
-
-          if (elapsed > required) {
-            cancelAnimationFrame(request);
-          }
-        };
-        request = requestAnimationFrame(timeCounter);
-      }
-    });
-  });
-  observer.observe(screen, config);
-
-
-
-
-
-
-
-
-
-
-});
-
-
-/***/ }),
-
 /***/ "./source/js/modules/load-listener.js":
 /*!********************************************!*\
   !*** ./source/js/modules/load-listener.js ***!
@@ -11122,6 +11038,68 @@ const storyListener = () => {
 
 /***/ }),
 
+/***/ "./source/js/modules/timer.js":
+/*!************************************!*\
+  !*** ./source/js/modules/timer.js ***!
+  \************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (() => {
+  const TIME = 5;
+
+  let screen = document.querySelector(`.screen--game`);
+  let config = {
+    attributes: true,
+    attributeOldValue: true
+  };
+
+  let counter = document.querySelector(`.game__counter`);
+  let minutesContainer = counter.children[0];
+  let secondsContainer = counter.children[1];
+
+  let observer = new MutationObserver((mutations) => {
+    mutations.forEach(() => {
+      if (screen.classList.contains(`active`)) {
+        let then = Date.now();
+
+        let request;
+        let deadline = 60000 * TIME;
+
+
+        let timeCounter = () => {
+          setTimeout(() => {
+            request = requestAnimationFrame(timeCounter);
+
+            let now = Date.now();
+            let passed = now - then;
+            let remained = deadline - passed;
+
+            if (passed >= deadline) {
+              cancelAnimationFrame(request);
+            }
+
+            const minutes = remained > 0 ? Math.floor(remained / 1000 / 60) % 60 : 0;
+            const seconds = remained > 0 ? Math.floor(remained / 1000) % 60 : 0;
+
+            minutesContainer.textContent = minutes.toString();
+            secondsContainer.textContent = seconds < 10 ? `0${seconds.toString()}` : seconds.toString();
+          }, 250);
+
+        };
+
+        request = requestAnimationFrame(timeCounter);
+      }
+    });
+  });
+  observer.observe(screen, config);
+});
+
+
+/***/ }),
+
 /***/ "./source/js/script.js":
 /*!*****************************!*\
   !*** ./source/js/script.js ***!
@@ -11145,7 +11123,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_animation_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./modules/animation.js */ "./source/js/modules/animation.js");
 /* harmony import */ var _modules_story_listener__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./modules/story-listener */ "./source/js/modules/story-listener.js");
 /* harmony import */ var _modules_footer_animation_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./modules/footer-animation.js */ "./source/js/modules/footer-animation.js");
-/* harmony import */ var _modules_game_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./modules/game.js */ "./source/js/modules/game.js");
+/* harmony import */ var _modules_timer_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./modules/timer.js */ "./source/js/modules/timer.js");
 // modules
 
 
@@ -11178,7 +11156,7 @@ Object(_modules_prizes_opener_js__WEBPACK_IMPORTED_MODULE_10__["default"])();
 Object(_modules_animation_js__WEBPACK_IMPORTED_MODULE_11__["animationPreparer"])();
 Object(_modules_story_listener__WEBPACK_IMPORTED_MODULE_12__["storyListener"])();
 Object(_modules_footer_animation_js__WEBPACK_IMPORTED_MODULE_13__["default"])();
-Object(_modules_game_js__WEBPACK_IMPORTED_MODULE_14__["default"])();
+Object(_modules_timer_js__WEBPACK_IMPORTED_MODULE_14__["default"])();
 
 const fullPageScroll = new _modules_full_page_scroll__WEBPACK_IMPORTED_MODULE_8__["default"]();
 fullPageScroll.init();
