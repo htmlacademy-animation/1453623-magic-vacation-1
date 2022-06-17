@@ -1,4 +1,4 @@
-import DrawScene from "./main-win-sea-calf.js";
+import DrawScene2DCrocodile from "./main-lose-crocodile.js";
 export default () => {
 
   let config = {
@@ -6,12 +6,12 @@ export default () => {
     attributeOldValue: true
   };
 
-  const screen = document.querySelector(`#result`);
+  const screen = document.querySelector(`#result3`);
 
   let observer = new MutationObserver((mutations) => {
     mutations.forEach(() => {
       if (screen.classList.contains(`screen--show`)) {
-        const scene = new DrawScene();
+        const scene = new DrawScene2DCrocodile();
       }
     });
   });
